@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>For Nyasha ❤️ | A Love Letter from Gareth</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root {
+    --rose: #c4405a;
+    --rose-deep: #9e2a42;
+    --rose-light: #e8899a;
+    --blush: #f5d0d6;
+    --cream: #fff8f0;
+    --gold: #d4a857;
+    --gold-light: #f0d68a;
+    --emerald: #2d6a4f;
+    --emerald-light: #52b788;
+    --wine: #5c1a2a;
+    --bg: #0f0a0c;
+    --bg-card: #1f1218;
+    --text-light: #f5e6ea;
+    --text-muted: #c9a0aa;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background: var(--bg);
+    color: var(--text-light);
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+    cursor: default;
+  }
+
+  /* -- CUSTOM CURSOR (subtle, only on interactive elements shows) -- */
+  .magnetic-btn, .envelope-wrapper, .next-btn, .restart-btn {
+    cursor: pointer;
+  }
+
+  /* -- STARFIELD -- */
+  .starfield {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 220, 230, 0.6);
+    animation: twinkle var(--dur) ease-in-out infinite alternate;
+  }
+  @keyframes twinkle {
+    0% { opacity: 0.2; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1.2); }
+  }
+
+  /* -- FLOATING HEARTS -- */
+  .hearts-container {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .floating-heart {
+    position: absolute;
+    bottom: -60px;
+    color: var(--rose);
+    opacity: 0;
+    animation: floatUp var(--dur) ease-in forwards;
+    animation-delay: var(--delay);
+    font-size: var(--size);
+    filter: blur(var(--blur, 0px));
+  }
+  @keyframes floatUp {
+    0% { opacity: 0; transform: translateY(0) rotate(0deg) scale(0.5); }
+    15% { opacity: var(--peak-opacity, 0.7); }
+    85% { opacity: var(--peak-opacity, 0.7); }
+    100% { opacity: 0; transform: translateY(calc(-100vh - 100px)) rotate(var(--rot, 30deg)) scale(1); }
+  }
+
+  /* -- SCENES -- */
+  .scene {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  .scene-inner {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  .scene-inner.scroll-layout {
+    justify-content: flex-start;
+    padding-top: 40px;
+    padding-bottom: 60px;
+  }
+  .scene.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* -- ENVELOPE -- */
+  .envelope-wrapper {
+    cursor: pointer;
+    position: relative;
+    animation: gentleFloat 3s ease-in-out infinite;
+  }
+  @keyframes gentleFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  .envelope {
+    width: min(320px, 80vw);
+    height: min(220px, 55vw);
+    background: linear-gradient(135deg, var(--rose) 0%, var(--rose-deep) 100%);
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(156, 30, 60, 0.4), 0 0 80px rgba(196, 64, 90, 0.15);
+    transition: transform 0.4s ease;
+  }
+  .envelope:hover { transform: scale(1.03); }
+  .envelope-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(160deg, var(--rose-deep), #b33550);
+    clip-path: polygon(0 0, 50% 100%, 100% 0);
+    z-index: 2;
+    transform-origin: top center;
+    transition: transform 0.6s ease;
+  }
+  .envelope-wrapper.opened .envelope-flap { transform: rotateX(180deg); }
+  .envelope-heart {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    font-size: 42px;
+    color: var(--gold);
+    filter: drop-shadow(0 0 12px rgba(212, 168, 87, 0.5));
+    animation: heartPulse 1.5s ease-in-out infinite;
+  }
+  @keyframes heartPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.15); }
+  }
+  .envelope-seal {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Great Vibes', cursive;
+    color: var(--gold-light);
+    font-size: 18px;
+    letter-spacing: 1px;
+    opacity: 0.9;
+  }
+  .scene1-hint {
+    margin-top: 40px;
+    font-size: 18px;
+    color: var(--text-muted);
+    font-style: italic;
+    animation: fadeInUp 1.2s ease 0.5s both;
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* -- LETTER CARD (Nyasha) -- */
+  .letter-card {
+    max-width: 540px;
+    width: 92vw;
+    background: linear-gradient(170deg, #2e1420 0%, #1e0c16 100%);
+    border: 1px solid rgba(196, 64, 90, 0.25);
+    border-radius: 20px;
+    padding: 36px 28px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,200,210,0.08);
+  }
+  .letter-ornament { text-align: center; color: var(--gold); font-size: 24px; margin-bottom: 16px; opacity: 0; animation: fadeInUp 0.8s ease forwards; }
+  .letter-name { font-family: 'Great Vibes', cursive; font-size: clamp(38px, 9vw, 58px); text-align: center; background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--rose-light)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; opacity: 0; animation: fadeInUp 0.8s ease 0.2s forwards; }
+  .letter-divider { width: 80px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 12px auto 24px; opacity: 0; animation: fadeInUp 0.8s ease 0.4s forwards; }
+  .letter-body { font-size: clamp(17px, 4.2vw, 20px); line-height: 1.85; color: var(--text-light); text-align: left; opacity: 0; animation: fadeInUp 0.8s ease 0.5s forwards; margin-bottom: 28px; }
+  .letter-body p { margin-bottom: 18px; }
+  .letter-body .highlight { color: var(--rose-light); font-weight: 600; }
+  .letter-body .gold { color: var(--gold-light); font-weight: 600; }
+  .letter-body .ask { display: block; text-align: center; font-size: clamp(20px, 5vw, 26px); font-weight: 600; color: var(--rose-light); margin: 28px 0 20px; font-style: italic; }
+  .letter-body .pharmacy-dream { display: block; text-align: center; background: rgba(82, 183, 136, 0.15); border-radius: 40px; padding: 12px; margin: 24px 0; font-weight: 500; color: var(--emerald-light); }
+  .letter-signature { text-align: right; font-family: 'Great Vibes', cursive; font-size: clamp(24px, 6vw, 34px); color: var(--gold); opacity: 0; animation: fadeInUp 0.8s ease 0.7s forwards; margin-bottom: 28px; }
+  .next-btn {
+    display: block; margin: 0 auto; padding: 14px 40px; background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+    color: white; border: none; border-radius: 50px; font-family: 'Cormorant Garamond', serif; font-size: 18px; letter-spacing: 2px;
+    cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 24px rgba(156,30,60,0.4); opacity: 0; animation: fadeInUp 0.8s ease 0.9s forwards;
+  }
+  .next-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(156,30,60,0.5); }
+
+  /* -- REASONS CARDS -- */
+  .reasons-container { max-width: 480px; width: 90vw; text-align: center; }
+  .reasons-title { font-family: 'Great Vibes', cursive; font-size: clamp(32px, 8vw, 48px); background: linear-gradient(135deg, var(--gold-light), var(--rose-light)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 32px; opacity: 0; animation: fadeInUp 0.8s ease forwards; }
+  .reason-card {
+    background: linear-gradient(170deg, rgba(46,20,32,0.9), rgba(30,12,22,0.9)); border: 1px solid rgba(196,64,90,0.15);
+    border-radius: 16px; padding: 18px 22px; margin-bottom: 16px; display: flex; align-items: center; gap: 16px;
+    opacity: 0; transform: translateX(-30px); animation: slideIn 0.6s ease forwards; transition: border-color 0.3s, transform 0.3s;
+  }
+  .reason-card:hover { border-color: rgba(196,64,90,0.4); transform: translateX(4px); }
+  @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
+  .reason-icon { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--rose), var(--rose-deep)); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px; box-shadow: 0 4px 12px rgba(156,30,60,0.3); }
+  .reason-text { font-size: 17px; line-height: 1.5; color: var(--text-light); text-align: left; }
+
+  /* -- GRAND FINALE -- */
+  .finale-container { text-align: center; position: relative; }
+  .finale-heart { font-size: clamp(80px, 20vw, 140px); animation: heartBeat 1.2s ease-in-out infinite; display: inline-block; filter: drop-shadow(0 0 40px rgba(196,64,90,0.5)); margin-bottom: 20px; }
+  @keyframes heartBeat { 0%,100% { transform: scale(1); } 15% { transform: scale(1.15); } 30% { transform: scale(1); } 45% { transform: scale(1.1); } 60% { transform: scale(1); } }
+  .finale-text { font-family: 'Great Vibes', cursive; font-size: clamp(36px, 10vw, 72px); background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--rose-light), var(--gold-light)); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; opacity: 0; animation: fadeInUp 1s ease 0.3s forwards, shimmer 4s ease-in-out 1.3s infinite; }
+  @keyframes shimmer { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+  .finale-message { font-size: 21px; color: var(--text-muted); font-style: italic; line-height: 1.7; max-width: 380px; margin: 20px auto 0; opacity: 0; animation: fadeInUp 1s ease 0.8s forwards; }
+  .question-buttons { display: flex; justify-content: center; gap: 24px; margin: 32px 0 24px; flex-wrap: wrap; opacity: 0; animation: fadeInUp 0.8s ease 1.2s forwards; }
+  .magnetic-btn {
+    padding: 14px 28px; background: linear-gradient(135deg, var(--emerald), var(--emerald-light)); border: none; border-radius: 60px;
+    font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: white; cursor: pointer; box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+    transition: all 0.2s ease; transform-style: preserve-3d;
+  }
+  .magnetic-btn:nth-child(2) { background: linear-gradient(135deg, #7a2e42, #9e2a42); }
+  .magnetic-btn:hover { filter: brightness(1.05); transform: scale(1.02); }
+  .restart-btn {
+    margin-top: 30px; padding: 10px 28px; background: transparent; color: var(--text-muted); border: 1px solid rgba(196,64,90,0.4);
+    border-radius: 50px; font-size: 16px; letter-spacing: 2px; cursor: pointer; transition: all 0.3s ease;
+  }
+  .restart-btn:hover { border-color: var(--rose); color: var(--rose-light); background: rgba(196,64,90,0.1); }
+  .scroll-hint { text-align: center; color: var(--text-muted); font-size: 14px; letter-spacing: 2px; margin-top: 24px; opacity: 0; animation: fadeInUp 0.8s ease 1.2s forwards; }
+  .scroll-hint i { display: block; margin-top: 6px; animation: bounceDown 1.5s ease-in-out infinite; font-size: 16px; }
+  @keyframes bounceDown { 0%,100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(6px); opacity: 1; } }
+
+  /* -- PETAL BURST -- */
+  .petal-burst { position: fixed; inset: 0; z-index: 100; pointer-events: none; overflow: hidden; }
+  .petal { position: absolute; width: var(--petal-size, 14px); height: var(--petal-size, 14px); background: var(--petal-color, var(--rose)); border-radius: 50% 0 50% 50%; opacity: 0; animation: petalFall var(--petal-dur, 3s) ease forwards; animation-delay: var(--petal-delay, 0s); }
+  @keyframes petalFall { 0% { opacity: 0.9; transform: translate(0,0) rotate(0deg) scale(1); } 100% { opacity: 0; transform: translate(var(--dx,100px), var(--dy,400px)) rotate(var(--dr,360deg)) scale(0.3); } }
+
+  .flash-overlay { position: fixed; inset: 0; z-index: 50; background: radial-gradient(circle at center, rgba(196,64,90,0.3), transparent); opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+  .flash-overlay.active { opacity: 1; }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--rose-deep); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<div class="starfield" id="starfield"></div>
+<div class="hearts-container" id="heartsContainer"></div>
+<div class="flash-overlay" id="flashOverlay"></div>
+
+<!-- SCENE 1: ENVELOPE for Nyasha -->
+<div class="scene active" id="scene1">
+  <div class="scene-inner">
+    <div class="envelope-wrapper" id="envelopeWrapper" role="button" aria-label="Open the envelope for Nyasha">
+      <div class="envelope">
+        <div class="envelope-flap"></div>
+        <div class="envelope-heart"><i class="fas fa-heart"></i></div>
+        <div class="envelope-seal">For Nyasha ❤️</div>
+      </div>
+    </div>
+    <p class="scene1-hint">tap to open the letter</p>
+  </div>
+</div>
+
+<!-- SCENE 2: THE LETTER (Nyasha's story) - UPDATED with Hsibindi Health Pharmacy and extra line -->
+<div class="scene" id="scene2">
+  <div class="scene-inner scroll-layout">
+    <div class="letter-card">
+      <div class="letter-ornament">&#10047; &#9829; &#10047;</div>
+      <div class="letter-name">My Dearest Nyasha,</div>
+      <div class="letter-divider"></div>
+      <div class="letter-body">
+        <p>There’s a warmth about you that stays with me long after we speak. You carry <span class="highlight">a soft heart</span> in a world that often asks you to be hard. Yet you remain kind, prayerful, and fiercely determined.</p>
+        <p>I see a woman who wakes up for morning Mass, who dreams of healing communities, who dares to build <span class="gold">Hsibindi Health Pharmacy</span> and <span class="gold">Isibindi Door2Door</span> — a healthcare vision rooted in compassion and excellence.</p>
+        <p>You told me once you felt like life was winning. But from where I stand, I see you <span class="highlight">building under pressure</span>, not breaking. That courage — to invest almost everything into a dream because people deserve better — that’s the most beautiful kind of strength.</p>
+        <div class="pharmacy-dream"><i class="fas fa-capsules"></i>  💊 Isibindi Health Pharmacy will stand. Patients will trust you. And I’ll be right there, with spreadsheets, strategy, and all my heart.  💊 <i class="fas fa-heartbeat"></i></div>
+        <p>We’ve discussed supplier quotations, retention models, future marriage logistics, and soft kisses — all in the same week. Somehow, that’s become my favourite kind of chaos. 😭❤️</p>
+        <span class="ask">So I need to ask you, Nyasha...</span>
+        <p><span class="gold">Will you be my girlfriend?</span> And one day, if life and love keep growing the way I believe they will — would you consider becoming the <span class="gold">future Mrs. Gareth</span>?</p>
+        <p style="text-align:center; background: rgba(212,168,87,0.1); border-radius: 40px; padding: 8px; margin-top: 8px;"><i class="fas fa-smile-wink"></i> I know you already are my girlfriend but I think this way is cooler kkkk 😎❤️</p>
+        <p style="text-align:center; margin-top: 12px;">I’m ready to build a beautiful life, a meaningful business, and a dangerous amount of emotional attachment with my favourite pharmacist. 😌</p>
+      </div>
+      <div class="letter-signature">Forever yours, Gareth &#9829;</div>
+      <button class="next-btn" id="toReasonsBtn">Continue <i class="fas fa-arrow-right" style="margin-left:8px;"></i></button>
+    </div>
+    <div class="scroll-hint" id="scrollHint2">scroll to read <i class="fas fa-chevron-down"></i></div>
+  </div>
+</div>
+
+<!-- SCENE 3: WHY NYASHA IS EXTRAORDINARY -->
+<div class="scene" id="scene3">
+  <div class="scene-inner scroll-layout">
+    <div class="reasons-container">
+      <div class="reasons-title">Why You're Extraordinary</div>
+      <div id="reasonsList"></div>
+      <div class="reasons-footer">
+        <button class="next-btn" id="toFinaleBtn">One more thing... <i class="fas fa-heart"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCENE 4: GRAND FINALE & QUESTION -->
+<div class="scene" id="scene4">
+  <div class="scene-inner">
+    <div class="finale-container">
+      <div class="finale-heart">❤️</div>
+      <div class="finale-text">Nyasha,</div>
+      <div class="finale-message">
+        You’re the woman with the brilliant mind, deep faith, and the courage to build something bigger than fear.<br>
+        So tell me, madam...
+      </div>
+      <div class="question-buttons">
+        <button class="magnetic-btn" id="yesBtn">Yes Gareth 😭❤️</button>
+        <button class="magnetic-btn" id="hugBtn">I Need More Hugs First 🫂</button>
+      </div>
+      <div class="finale-sub" style="font-size:15px; margin-top:8px;">from Gareth, with all my love</div>
+      <button class="restart-btn" id="restartBtn"><i class="fas fa-redo"></i> Read Again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ----- STARFIELD -----
+    const starContainer = document.getElementById("starfield");
+    const starCount = Math.min(70, Math.floor(window.innerWidth * window.innerHeight / 8000));
+    for (let i = 0; i < starCount; i++) {
+      let star = document.createElement("div");
+      star.className = "star";
+      let size = Math.random() * 2.5 + 1;
+      star.style.width = size + "px";
+      star.style.height = size + "px";
+      star.style.left = Math.random() * 100 + "%";
+      star.style.top = Math.random() * 100 + "%";
+      star.style.setProperty("--dur", (Math.random() * 3 + 2) + "s");
+      star.style.animationDelay = Math.random() * 4 + "s";
+      starContainer.appendChild(star);
+    }
+
+    // ----- FLOATING HEARTS (romantic ambiance) -----
+    const heartSymbols = ["❤️", "💖", "💗", "🌸"];
+    const heartColors = ["#c4405a", "#e8899a", "#d4a857", "#f2c1c8"];
+    function spawnHeart() {
+      const container = document.getElementById("heartsContainer");
+      if (container.children.length > 20) return;
+      let heart = document.createElement("div");
+      heart.className = "floating-heart";
+      heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+      heart.style.left = Math.random() * 100 + "%";
+      heart.style.color = heartColors[Math.floor(Math.random() * heartColors.length)];
+      let s = Math.random() * 18 + 14;
+      heart.style.setProperty("--size", s + "px");
+      heart.style.setProperty("--dur", (Math.random() * 6 + 6) + "s");
+      heart.style.setProperty("--delay", "0s");
+      heart.style.setProperty("--rot", (Math.random() * 60 - 30) + "deg");
+      heart.style.setProperty("--peak-opacity", (Math.random() * 0.4 + 0.3).toFixed(2));
+      container.appendChild(heart);
+      heart.addEventListener("animationend", () => heart.remove());
+    }
+    setInterval(spawnHeart, 750);
+
+    // ----- PETAL BURST FUNCTION -----
+    function burstPetals(x, y, count = 36) {
+      let container = document.createElement("div");
+      container.className = "petal-burst";
+      document.body.appendChild(container);
+      const petalColors = ["#c4405a", "#e8899a", "#f2c1c8", "#d4a857", "#f5d0d6", "#52b788"];
+      for (let i = 0; i < count; i++) {
+        let petal = document.createElement("div");
+        petal.className = "petal";
+        petal.style.left = x + "px";
+        petal.style.top = y + "px";
+        let angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+        let dist = Math.random() * 200 + 100;
+        petal.style.setProperty("--dx", (Math.cos(angle) * dist) + "px");
+        petal.style.setProperty("--dy", (Math.sin(angle) * dist - 100) + "px");
+        petal.style.setProperty("--dr", (Math.random() * 720 - 360) + "deg");
+        petal.style.setProperty("--petal-size", (Math.random() * 10 + 8) + "px");
+        petal.style.setProperty("--petal-color", petalColors[Math.floor(Math.random() * petalColors.length)]);
+        petal.style.setProperty("--petal-dur", (Math.random() * 1.5 + 1.5) + "s");
+        petal.style.setProperty("--petal-delay", (Math.random() * 0.3) + "s");
+        container.appendChild(petal);
+      }
+      setTimeout(() => container.remove(), 3800);
+    }
+
+    // ----- SCENE TRANSITION -----
+    let currentScene = 1;
+    function transitionTo(sceneNum) {
+      let flash = document.getElementById("flashOverlay");
+      flash.classList.add("active");
+      setTimeout(() => {
+        document.getElementById(`scene${currentScene}`).classList.remove("active");
+        document.getElementById(`scene${sceneNum}`).classList.add("active");
+        currentScene = sceneNum;
+        flash.classList.remove("active");
+        if (sceneNum === 3) renderReasons();
+        if (sceneNum === 4) {
+          let heartEl = document.querySelector(".finale-heart");
+          if (heartEl) {
+            let rect = heartEl.getBoundingClientRect();
+            burstPetals(rect.left + rect.width/2, rect.top + rect.height/2, 45);
+          }
+        }
+      }, 400);
+    }
+
+    // ----- ENVELOPE LOGIC -----
+    const envelopeWrapper = document.getElementById("envelopeWrapper");
+    envelopeWrapper.addEventListener("click", (e) => {
+      if (envelopeWrapper.classList.contains("opened")) return;
+      envelopeWrapper.classList.add("opened");
+      burstPetals(e.clientX || window.innerWidth/2, e.clientY || window.innerHeight/2, 28);
+      setTimeout(() => transitionTo(2), 900);
+    });
+    envelopeWrapper.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); envelopeWrapper.click(); } });
+
+    // scroll hint for scene2
+    const scene2Div = document.getElementById("scene2");
+    const scrollHint2 = document.getElementById("scrollHint2");
+    scene2Div.addEventListener("scroll", () => {
+      if (scene2Div.scrollTop > 30 && scrollHint2) scrollHint2.style.opacity = "0";
+    });
+
+    // button to reasons
+    document.getElementById("toReasonsBtn").addEventListener("click", () => transitionTo(3));
+    document.getElementById("toFinaleBtn").addEventListener("click", () => transitionTo(4));
+
+    // ----- REASONS (custom for Nyasha) -----
+    const REASONS = [
+      { icon: "fa-praying-hands", text: "Your unwavering faith & morning Mass – you inspire me to be better." },
+      { icon: "fa-brain", text: "Brilliant mind: from pharmacy formulas to business strategy, you amaze me." },
+      { icon: "fa-heart", text: "A soft heart that cares deeply, even when the world is heavy." },
+      { icon: "fa-chart-line", text: "Visionary: building Hsibindi Health Pharmacy & Isibindi, healing communities with courage." },
+      { icon: "fa-hand-sparkles", text: "You handle pressure with grace, turning fear into fuel." },
+      { icon: "fa-kiss-wink-heart", text: "Your laughter & our weird convos – supplier quotes & sweet kisses!" },
+      { icon: "fa-rocket", text: "You're not just dreaming; you're building – and I want to build with you." }
+    ];
+    function renderReasons() {
+      const list = document.getElementById("reasonsList");
+      if (!list) return;
+      list.innerHTML = "";
+      REASONS.forEach((r, idx) => {
+        let card = document.createElement("div");
+        card.className = "reason-card";
+        card.style.animationDelay = (0.15 * idx + 0.2) + "s";
+        card.innerHTML = `<div class="reason-icon"><i class="fas ${r.icon}"></i></div><div class="reason-text">${r.text}</div>`;
+        list.appendChild(card);
+      });
+    }
+
+    // ----- FINALE BUTTONS (magnetic effect & answer feedback) -----
+    const yesBtn = document.getElementById("yesBtn");
+    const hugBtn = document.getElementById("hugBtn");
+    function showFloatingMessage(msg) {
+      let div = document.createElement("div");
+      div.innerText = msg;
+      div.style.position = "fixed"; div.style.bottom = "25%"; div.style.left = "50%"; div.style.transform = "translateX(-50%)";
+      div.style.background = "rgba(196,64,90,0.9)"; div.style.color = "white"; div.style.padding = "12px 24px";
+      div.style.borderRadius = "60px"; div.style.fontFamily = "'Cormorant Garamond', serif"; div.style.fontSize = "1.3rem";
+      div.style.zIndex = "200"; div.style.backdropFilter = "blur(8px)"; div.style.boxShadow = "0 6px 18px rgba(0,0,0,0.3)";
+      div.style.fontWeight = "bold"; div.style.letterSpacing = "1px";
+      document.body.appendChild(div);
+      setTimeout(() => { div.style.opacity = "0"; div.style.transition = "0.5s"; setTimeout(() => div.remove(), 600); }, 2000);
+    }
+    yesBtn.addEventListener("click", () => {
+      burstPetals(window.innerWidth/2, window.innerHeight/2, 60);
+      showFloatingMessage("You just made me the happiest man alive. 😭❤️ I love you, Nyasha!");
+    });
+    hugBtn.addEventListener("click", () => {
+      showFloatingMessage("Come here 🫂 I’ll give you all the hugs you need. Forever and always.");
+      burstPetals(window.innerWidth/2, window.innerHeight-80, 30);
+    });
+
+    // ---- MAGNETIC BUTTON EFFECT (simple, still playful) ----
+    const magneticBtns = document.querySelectorAll(".magnetic-btn");
+    magneticBtns.forEach(btn => {
+      btn.addEventListener("mousemove", function(e) {
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width/2;
+        const y = e.clientY - rect.top - rect.height/2;
+        this.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px) scale(1.02)`;
+      });
+      btn.addEventListener("mouseleave", function() {
+        this.style.transform = "translate(0,0) scale(1)";
+      });
+    });
+
+    // restart button
+    document.getElementById("restartBtn").addEventListener("click", () => {
+      envelopeWrapper.classList.remove("opened");
+      transitionTo(1);
+    });
+  })();
+</script>
+</body>
+</html>
